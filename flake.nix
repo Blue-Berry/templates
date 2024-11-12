@@ -1,15 +1,13 @@
 {
   description = "A collection of flake templates";
 
-  outputs = { self }: {
-
+  outputs = {self}: {
     templates = {
-
-     ocaml = {
+      ocaml = {
         path = ./ocaml;
         description = "Bare Bones Ocaml env";
         welcometext = ''
-        Simple Ocaml
+          Simple Ocaml
         '';
       };
 
@@ -20,6 +18,5 @@
     };
 
     defaultTemplate = self.templates.trivial;
-
   };
 }

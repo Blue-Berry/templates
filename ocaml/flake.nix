@@ -17,12 +17,24 @@
         pkgs,
         system,
         ...
-      }:
-let
+      }: let
+        serial = ocamlPackages.buildDunePackage rec {
+          # https://opam.ocaml.org/packages/serial/
+          pname = "serial";
+          version = "";
+          src = builtins.fetchurl {
+            url = "https://github.com/m-laniakea/oserial/releases/download/v0.1.0/serial-0.1.0.tbz";
+            sha256 = "sha256:5034e009b14e0ba3a82b48026de13b2df3d80f37e14bd013b5dbd062f698370c";
+          };
+          propagatedBuildInputs = with pkgs; [
+            # Add the packages needed
+            ocamlPackages.lwt
+          ];
+        };
         inherit (pkgs) dockerTools ocamlPackages mkShell;
         inherit (dockerTools) buildImage;
         inherit (ocamlPackages) buildDunePackage;
-        name = "default";
+        name = "CahngeMe";
         version = "0.0.1";
       in {
         devShells = {
@@ -38,7 +50,9 @@ let
             pname = name;
             src = ./.;
             buildInputs = with pkgs.ocamlPackages; [
-                core
+              serial
+              core
+              lwt
             ];
           };
 
