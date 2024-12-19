@@ -9,18 +9,16 @@
     opam-repository.url = "github:ocaml/opam-repository";
     opam-repository.flake = false;
   };
-  outputs =
-    {
-      self,
-      flake-utils,
-      opam-nix,
-      nixpkgs,
-      with-extensions,
-      opam-repository,
-    }@inputs:
+  outputs = {
+    self,
+    flake-utils,
+    opam-nix,
+    nixpkgs,
+    with-extensions,
+    opam-repository,
+  } @ inputs:
     flake-utils.lib.eachDefaultSystem (
-      system:
-      let
+      system: let
         pkgs = nixpkgs.legacyPackages.${system};
         on = opam-nix.lib.${system};
         localPackagesQuery =
@@ -33,28 +31,33 @@
           merlin = "5.2.1-502+jst";
           ocaml-lsp-server = "1.19.0+jst";
         };
-        query = devPackagesQuery // {
-          ## You can force versions of certain packages here, e.g:
-          ## - force the ocaml compiler to be taken from opam-repository:
-          ocaml-variants = "5.2.0+flambda2";
-          ## - or force the compiler to be taken from nixpkgs and be a certain version:
-          # ocaml-system = "4.14.0";
-          ## - or force ocamlfind to be a certain version:
-          # ocamlfind = "1.9.2";
-        };
-        scope = on.buildOpamProject' {
-          repos = [
-            opam-repository
-            with-extensions
-          ];
-        } ./. query;
+        query =
+          devPackagesQuery
+          // {
+            ## You can force versions of certain packages here, e.g:
+            ## - force the ocaml compiler to be taken from opam-repository:
+            ocaml-variants = "5.2.0+flambda2";
+            ## - or force the compiler to be taken from nixpkgs and be a certain version:
+            # ocaml-system = "4.14.0";
+            ## - or force ocamlfind to be a certain version:
+            # ocamlfind = "1.9.2";
+          };
+        scope =
+          on.buildOpamProject' {
+            repos = [
+              opam-repository
+              with-extensions
+            ];
+          }
+          ./.
+          query;
         overlay = final: prev: {
           # You can add overrides here
           init-dune = prev.init-dune.overrideAttrs (oa: {
-            nativeBuildInputs = oa.nativeBuildInputs ++ [ pkgs.ocaml-ng.ocamlPackages_4_14.ocaml ];
+            nativeBuildInputs = oa.nativeBuildInputs ++ [pkgs.ocaml-ng.ocamlPackages_4_14.ocaml];
           });
           init-menhir = prev.init-menhir.overrideAttrs (oa: {
-            nativeBuildInputs = oa.nativeBuildInputs ++ [ pkgs.ocaml-ng.ocamlPackages_4_14.ocaml ];
+            nativeBuildInputs = oa.nativeBuildInputs ++ [pkgs.ocaml-ng.ocamlPackages_4_14.ocaml];
             preBuild = "mkdir -p $out/init_deps/bin; ln -s ${final.init-dune}/init_deps/bin/dune $out/init_deps/bin";
           });
           ocaml-variants = prev.ocaml-variants.overrideAttrs (oa: {
@@ -64,17 +67,19 @@
               export PATH=$PATH:${final.init-menhir}/init_deps/bin:${final.init-dune}/init_deps/bin
               sed -i "s|/usr/bin/env|${pkgs.coreutils}/bin/env|g" Makefile Makefile.* ocaml/Makefile.*
             '';
-            nativeBuildInputs = oa.nativeBuildInputs ++ [
-              pkgs.autoconf
-              pkgs.which
-              pkgs.rsync
-            ];
+            nativeBuildInputs =
+              oa.nativeBuildInputs
+              ++ [
+                pkgs.autoconf
+                pkgs.which
+                pkgs.rsync
+              ];
           });
           stdio = prev.stdio.overrideAttrs (oa: {
-            buildInputs = [ final.base final.sexplib0 ];
+            buildInputs = [final.base final.sexplib0];
           });
           base = prev.base.overrideAttrs (oa: {
-            buildInputs = [ final.ocaml_intrinsics_kernel final.sexplib0 ];
+            buildInputs = [final.ocaml_intrinsics_kernel final.sexplib0];
           });
         };
         scope' = scope.overrideScope overlay;
@@ -82,8 +87,7 @@
         devPackages = builtins.attrValues (pkgs.lib.getAttrs (builtins.attrNames devPackagesQuery) scope');
         # Packages in this workspace
         packages = pkgs.lib.getAttrs (builtins.attrNames localPackagesQuery) scope';
-      in
-      {
+      in {
         legacyPackages = scope';
 
         inherit packages;
@@ -93,9 +97,11 @@
 
         devShells.default = pkgs.mkShell {
           inputsFrom = builtins.attrValues packages;
-          buildInputs = devPackages ++ [
-            # You can add packages from nixpkgs here
-          ];
+          buildInputs =
+            devPackages
+            ++ [
+              # You can add packages from nixpkgs here
+            ];
         };
       }
     );

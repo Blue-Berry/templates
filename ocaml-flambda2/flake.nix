@@ -1,9 +1,8 @@
-
 {
   description = "Description for ocaml project";
 
   inputs = {
-    nixpkgs.url = "/home/liam/playground/ocaml/nix-overlays";
+    nixpkgs.url = "github:Blue-Berry/nix-overlays";
     flake-parts.url = "github:hercules-ci/flake-parts";
   };
 
@@ -19,7 +18,7 @@
         system,
         ...
       }: let
-        inherit (pkgs) dockerTools mkShell;
+        inherit (pkgs) mkShell;
         ocamlPackages = pkgs.ocaml-ng.ocamlPackages_flambda2;
         inherit (ocamlPackages) buildDunePackage;
         name = "CahngeMe";
@@ -28,7 +27,7 @@
         devShells = {
           default = mkShell {
             inputsFrom = [self'.packages.default];
-            buildInputs = [];
+            buildInputs = [pkgs.ocamlPackages.ocaml-lsp];
           };
         };
 
@@ -38,10 +37,10 @@
             pname = name;
             src = ./.;
             buildInputs = with pkgs.ocamlPackages; [
+              core
             ];
           };
         };
       };
     };
 }
-
