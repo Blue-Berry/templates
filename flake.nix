@@ -10,6 +10,13 @@
           Simple Ocaml
         '';
       };
+      ocaml-flambda2 = {
+        path = ./ocaml-flambda2;
+        description = "Bare Bones Ocaml env using the flambda2 compiler";
+        welcometext = ''
+          Flambda2
+        '';
+      };
       ocaml-with-variants = {
         path = ./ocaml-with-variants;
         description = "Jane street Ocaml compiler";
