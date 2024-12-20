@@ -27,7 +27,7 @@
         devShells = {
           default = mkShell {
             inputsFrom = [self'.packages.default];
-            buildInputs = [pkgs.ocamlPackages.ocaml-lsp];
+            buildInputs = [ocamlPackages.ocaml-lsp ocamlPackages.ocamlformat];
           };
         };
 
@@ -36,8 +36,9 @@
             inherit version;
             pname = name;
             src = ./.;
-            buildInputs = with pkgs.ocamlPackages; [
+            buildInputs = with ocamlPackages; [
               core
+              ppx_jane
             ];
           };
         };
