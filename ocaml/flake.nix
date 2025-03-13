@@ -40,7 +40,7 @@
         devShells = {
           default = mkShell {
             inputsFrom = [self'.packages.default];
-            buildInputs = [pkgs.ocamlPackages.utop pkgs.ocamlPackages.ocaml-lsp pkgs.ocamlPackages.ocamlformat pkgs.ocamlPackages.magic-trace];
+            buildInputs = [pkgs.ocamlPackages.utop pkgs.ocamlPackages.ocaml-lsp pkgs.ocamlPackages.ocamlformat];
           };
         };
 
