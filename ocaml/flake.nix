@@ -31,8 +31,11 @@
             ocamlPackages.lwt
           ];
         };
-        inherit (pkgs) dockerTools ocamlPackages mkShell;
+        inherit (pkgs) dockerTools mkShell;
         inherit (dockerTools) buildImage;
+        # Use specific version of ocamlPackages
+        # inherit (pkgs) ocamlPackages;
+        ocamlPackages = pkgs.ocaml-ng.ocamlPackages_5_3;
         inherit (ocamlPackages) buildDunePackage;
         name = "CahngeMe";
         version = "0.0.1";
@@ -40,7 +43,16 @@
         devShells = {
           default = mkShell {
             inputsFrom = [self'.packages.default];
-            buildInputs = [pkgs.ocamlPackages.utop pkgs.ocamlPackages.ocaml-lsp pkgs.ocamlPackages.ocamlformat];
+            buildInputs = with ocamlPackages; [
+              utop
+              ocamlformat
+              # patch ocaml-lsp so that inlay hints dont hide ghost values
+              (ocamlPackages.ocaml-lsp.overrideAttrs (oldAttrs: {
+                patches = [
+                  ./inlay-hints.patch
+                ];
+              }))
+            ];
           };
         };
 
