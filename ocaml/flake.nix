@@ -61,7 +61,7 @@
             inherit version;
             pname = name;
             src = ./.;
-            buildInputs = with pkgs.ocamlPackages; [
+            buildInputs = with ocamlPackages; [
               serial
               core
               lwt
