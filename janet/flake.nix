@@ -47,7 +47,6 @@
             src = ./.;
             withJanetPackages = with j2nPkgs; [
               spork
-              # Add other janet packages as needed
             ];
           };
         };
