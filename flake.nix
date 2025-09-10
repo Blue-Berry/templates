@@ -3,6 +3,13 @@
 
   outputs = {self}: {
     templates = {
+      janet = {
+        path = ./janet;
+        description = "Minimal Janet dev shell with janet-lsp (flake-parts)";
+        welcometext = ''
+          Provides a flake-parts devShell with `janet`, `jpm`, and `janet-lsp` from Blue-Berry/janet-lsp.nix.
+        '';
+      };
       ocaml = {
         path = ./ocaml;
         description = "Bare Bones Ocaml env";

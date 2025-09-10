@@ -31,20 +31,24 @@
         name = "CahngeMe";
         version = "0.0.1";
 
-       overlay = final: prev: {
+        overlay = final: prev: {
           "${name}" = prev.${name}.overrideAttrs (_: {
             # override derivation attributes, e.g. add additional dependacies
-            buildInputs = [ ];
+            buildInputs = [];
           });
         };
 
-        resolved-scope =
-          let scope = buildOpamProject { } name ./. query;
-          in scope.overrideScope' overlay;
-        materialized-scope =
-          let scope = materializedDefsToScope
-            { sourceMap.${name} = ./.; } ./package-defs.json;
-          in scope.overrideScope' overlay;
+        resolved-scope = let
+          scope = buildOpamProject {} name ./. query;
+        in
+          scope.overrideScope' overlay;
+        materialized-scope = let
+          scope =
+            materializedDefsToScope
+            {sourceMap.${name} = ./.;}
+            ./package-defs.json;
+        in
+          scope.overrideScope' overlay;
       in rec {
         devShells = {
           default = mkShell {
