@@ -28,7 +28,7 @@
         j2nPkgs = inputs.janet2nix.packages.${system};
         janet-lsp = pkgs.callPackage inputs.janet-lsp-src {};
         inherit (pkgs) mkShell;
-        name = "ChangeMe";
+        name = "hello";
       in {
         devShells = {
           default = mkShell {
