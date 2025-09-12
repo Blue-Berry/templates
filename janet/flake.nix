@@ -15,6 +15,15 @@
       url = "github:janet-lang/spork";
       flake = false;
     };
+
+    posix-spawn = {
+      url = "github:andrewchambers/janet-posix-spawn";
+      flake = false;
+    };
+    sh = {
+      url = "github:andrewchambers/janet-sh";
+      flake = false;
+    };
   };
 
   outputs = inputs @ {flake-parts, ...}:
@@ -30,7 +39,6 @@
         ...
       }: let
         j2nLib = inputs.janet2nix.lib.${system};
-        j2nPkgs = inputs.janet2nix.packages.${system};
         janet-lsp = pkgs.callPackage inputs.janet-lsp-src {};
         inherit (pkgs) mkShell;
         name = "hello";
@@ -38,6 +46,15 @@
         spork = j2nLib.mkJanetPackage {
           name = "spork";
           src = inputs.spork;
+        };
+        posix-spawn = j2nLib.mkJanetPackage {
+          name = "posix-spawn";
+          src = inputs.posix-spawn;
+        };
+        sh = j2nLib.mkJanetPackage {
+          name = "sh";
+          src = inputs.sh;
+          withJanetPackages = [posix-spawn];
         };
       in {
         devShells = {
@@ -57,6 +74,8 @@
             src = ./.;
             withJanetPackages = [
               spork
+              sh
+              posix-spawn
             ];
           };
         };
