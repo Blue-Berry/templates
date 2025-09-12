@@ -10,6 +10,11 @@
       url = "github:Blue-Berry/janet-lsp.nix";
       flake = false;
     };
+
+    spork = {
+      url = "github:janet-lang/spork";
+      flake = false;
+    };
   };
 
   outputs = inputs @ {flake-parts, ...}:
@@ -29,6 +34,11 @@
         janet-lsp = pkgs.callPackage inputs.janet-lsp-src {};
         inherit (pkgs) mkShell;
         name = "hello";
+
+        spork = j2nLib.mkJanetPackage {
+          name = "spork";
+          src = inputs.spork;
+        };
       in {
         devShells = {
           default = mkShell {
@@ -45,7 +55,7 @@
           default = j2nLib.mkJanetPackage {
             inherit name;
             src = ./.;
-            withJanetPackages = with j2nPkgs; [
+            withJanetPackages = [
               spork
             ];
           };
