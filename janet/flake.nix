@@ -24,6 +24,11 @@
       url = "github:andrewchambers/janet-sh";
       flake = false;
     };
+
+    jdoc = {
+      url = "github:sogaiu/jdoc";
+      flake = false;
+    };
   };
 
   outputs = inputs @ {flake-parts, ...}:
@@ -56,6 +61,11 @@
           src = inputs.sh;
           withJanetPackages = [posix-spawn];
         };
+
+        jdoc = j2nLib.mkJanetPackage {
+          name = "jdoc";
+          src = inputs.jdoc;
+        };
       in {
         devShells = {
           default = mkShell {
@@ -65,6 +75,10 @@
               jpm
               janet-lsp
             ];
+            shellHook = ''
+              export JANET_PATH="${jdoc}/jpm_tree/lib:$JANET_PATH"
+              export PATH="${jdoc}/jpm_tree/bin:$PATH"
+            '';
           };
         };
 

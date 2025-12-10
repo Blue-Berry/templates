@@ -46,12 +46,7 @@
             buildInputs = with ocamlPackages; [
               utop
               ocamlformat
-              # patch ocaml-lsp so that inlay hints dont hide ghost values
-              (ocamlPackages.ocaml-lsp.overrideAttrs (oldAttrs: {
-                patches = [
-                  ./inlay-hints.patch
-                ];
-              }))
+              ocaml-lsp
             ];
           };
         };
