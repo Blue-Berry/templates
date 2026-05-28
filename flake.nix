@@ -17,7 +17,6 @@
           Simple Ocaml
         '';
       };
-
       opam-nix = {
         path = ./ocaml-opam;
         description = "Ocaml env with opam-nix";
