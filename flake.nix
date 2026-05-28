@@ -17,6 +17,14 @@
           Simple Ocaml
         '';
       };
+
+      opam-nix = {
+        path = ./ocaml-opam;
+        description = "Ocaml env with opam-nix";
+        welcometext = ''
+          Opam Ocaml
+        '';
+      };
       ocaml-flambda2 = {
         path = ./ocaml-flambda2;
         description = "Bare Bones Ocaml env using the flambda2 compiler";
